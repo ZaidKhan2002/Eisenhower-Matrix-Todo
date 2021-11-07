@@ -1,71 +1,95 @@
-import React,{useRef, useState} from 'react'
-import {useAuth} from '../context/AuthContext'
-import { Link,useHistory } from 'react-router-dom'
+import React, { useRef, useState } from 'react'
+import { Link, useHistory } from 'react-router-dom'
+import { useAuth } from '../contexts/AuthContext'
 
-function Signup() {
-    const usernameref = useRef()
-    const emailref = useRef()
-    const passwordref = useRef()
-    const passwordconfirmref = useRef()
+export default function Signup() {
+   
+   const emailRef = useRef()
+   const passwordRef = useRef()
+   const passwordConfirmRef = useRef()
+   const { signup} = useAuth()
+   const [error, setError] = useState('')
+   const [loading, setLoading] = useState(false)
+   const history = useHistory()
 
-    const history = useHistory()
+   async function handleSubmit(e) {
+      e.preventDefault()
 
-    const [error, setError] = useState('')
-    const [loading, setLoading] = useState(false)
+      if(passwordRef.current.value !== passwordConfirmRef.current.value) {
+         return setError('Passwords do not match')
+      }
 
-    const {signup,curerntUser, updateUserName, signInWithGoogle} = useAuth()
+      try {
+         setError('')
+         setLoading(true)
+         await signup(emailRef.current.value, passwordRef.current.value)
+         history.push("/todoapp")
+      }
+      catch {
+         setError('Failed to create an account')
+      }
+      setLoading(false)
+   }
 
-    async function handleSubmit(e) {
-        e.preventDefault()
-        if(passwordref.current.value !== passwordconfirmref.current.value){
-            return setError('Password do not match')
-        }
-        try {
-            setError('')
-            setLoading(true)
-            const userSignUp = await signup(emailref.current.value, passwordref.current.value)
-            history.push("/login")
-        }
-        catch {
-            setError("Failed to create an account")
-        }
-        setLoading(false)
-    }
+   return (
+      <div class="bg-grey-lighter min-h-screen flex flex-col">
+            <div class="container max-w-sm mx-auto flex-1 flex flex-col items-center justify-center px-2">
+                <div class="bg-white px-6 py-8 rounded shadow-md text-black w-full">
+                    <h1 class="mb-8 text-3xl text-center">Sign up</h1>
+                    {error && <alert className = "bg-red-200 text-center text-xl ">{error}</alert> }
+                    <form onSubmit={handleSubmit}>
+                    <input 
+                        type="text"
+                        class="block border border-grey-light w-full p-3 rounded mb-4"
+                        name="fullname"
+                        placeholder="Full Name" />
 
+                    <input 
+                        type="text"
+                        class="block border border-grey-light w-full p-3 rounded mb-4"
+                        name="email"
+                        placeholder="Email" 
+                        ref={emailRef}
+                        />
+                    <input 
+                        type="password"
+                        class="block border border-grey-light w-full p-3 rounded mb-4"
+                        name="password"
+                        placeholder="Password" 
+                        ref={passwordRef}
+                        />
+                    <input 
+                        type="password"
+                        class="block border border-grey-light w-full p-3 rounded mb-4"
+                        name="confirm_password"
+                        placeholder="Confirm Password" 
+                        ref={passwordConfirmRef}
+                        />
 
-    return (
-        <div className="wrapper">
-         <div className="title">
-            Sign Up
-         </div>
-         {error && <p className = "error">{error}</p> }
-         {curerntUser && <p className = "success">{curerntUser.displayName}</p> }
-         <form onSubmit = {handleSubmit}>
-            <div className="field">
-               <input type="text" ref = {usernameref} required  />
-               <label>Username</label>
+                    <button disabled={loading}
+                        type="submit"
+                        class="w-full text-center py-3 rounded bg-blue-600 text-white hover:bg-blue-500 focus:outline-none my-1"
+                    >Create Account</button>
+
+                    </form>
+                    <div class="text-center text-sm text-grey-dark mt-4">
+                        By signing up, you agree to the 
+                        <a class="no-underline border-b border-grey-dark text-grey-dark" href="#">
+                            Terms of Service
+                        </a> and 
+                        <a class="no-underline border-b border-grey-dark text-grey-dark" href="#">
+                            Privacy Policy
+                        </a>
+                    </div>
+                </div>
+
+                <div class="text-grey-dark mt-6">
+                    Already have an account? 
+                    <a class="no-underline border-b border-blue text-blue" href="../login/">
+                        <Link to="/login">Log In</Link>
+                    </a>.
+                </div>
             </div>
-            <div className="field">
-               <input type="text" ref = {emailref} required />
-               <label>Email Address</label>
-            </div>
-            <div className="field">
-               <input type="password" ref = {passwordref} required />
-               <label>Password</label>
-            </div>
-            <div className="field">
-               <input type="password" ref = {passwordconfirmref} required />
-               <label>Confirm Password</label>
-            </div>
-            <div className="field">
-               <input type="submit" disabled = {loading} value={loading ? "Give us a sec": "Sign Up"} />
-            </div>
-            <div className="signup-link">
-               <Link to="/">Already have an account? Log In</Link>
-            </div>
-         </form>
-      </div>
-    )
+        </div>
+   )
 }
-
-export default Signup

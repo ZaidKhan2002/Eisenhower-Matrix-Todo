@@ -1,5 +1,5 @@
 import React from 'react'
-import Todo from './Todo'
+import Todo from '../Todo'
 
 const TodoList3 = ({ todos3, setTodos3 }) => {
 
