@@ -1,29 +1,110 @@
-import React, { useState } from 'react'
-import Form1 from './Form1'
-import Form2 from './Form2';
-import Form3 from './Form3';
-import Form4 from './Form4';
-import TodoList1 from './TodoList1'
-import TodoList2 from './TodoList2';
-import TodoList3 from './TodoList3';
-import TodoList4 from './TodoList4';
+import React, { useState, useEffect } from 'react'
+import { Link, useHistory } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
+import Form1 from './do_quad/Form1'
+import Form2 from './delegate_quad/Form2';
+import Form3 from './schedule_quad/Form3';
+import Form4 from './delete_quad/Form4';
+import TodoList1 from './do_quad/TodoList1'
+import TodoList2 from './delegate_quad/TodoList2';
+import TodoList3 from './schedule_quad/TodoList3';
+import TodoList4 from './delete_quad/TodoList4';
+
+const getLocalItems1 = () => {
+    let list1 = localStorage.getItem('lists1');
+
+    if(list1) {
+        return JSON.parse(localStorage.getItem('lists1'))
+    }else {
+        return []
+    }
+}
+
+const getLocalItems2 = () => {
+    let list2 = localStorage.getItem('lists2');
+
+    if(list2) {
+        return JSON.parse(localStorage.getItem('lists2'))
+    }else {
+        return []
+    }
+}
+
+const getLocalItems3 = () => {
+    let list3 = localStorage.getItem('lists3');
+
+    if(list3) {
+        return JSON.parse(localStorage.getItem('lists3'))
+    }else {
+        return []
+    }
+}
+
+const getLocalItems4 = () => {
+    let list4 = localStorage.getItem('lists4');
+
+    if(list4) {
+        return JSON.parse(localStorage.getItem('lists4'))
+    }else {
+        return []
+    }
+}
 
 function TodoApp() {
 
     const [inputText1, setInputText1] = useState("");
-    const [todos1, setTodos1] = useState([]);
+    const [todos1, setTodos1] = useState(getLocalItems1());
 
     const [inputText2, setInputText2] = useState("");
-    const [todos2, setTodos2] = useState([]);
+    const [todos2, setTodos2] = useState(getLocalItems2());
 
     const [inputText3, setInputText3] = useState("");
-    const [todos3, setTodos3] = useState([]);
+    const [todos3, setTodos3] = useState(getLocalItems3());
 
     const [inputText4, setInputText4] = useState("");
-    const [todos4, setTodos4] = useState([]);
+    const [todos4, setTodos4] = useState(getLocalItems4());
+
+    const [error, setError] = useState("")
+    const { currentUser, logout } = useAuth()
+    const history = useHistory()
+
+    async function handleLogout() {
+        setError('')
+
+        try {
+            await logout()
+            history.push('/')
+        } catch {
+            setError('Failed to log out')
+        }
+    }
+
+    useEffect(() => {
+        localStorage.setItem('lists1',JSON.stringify(todos1))
+    }, [todos1])
+
+    useEffect(() => {
+        localStorage.setItem('lists2',JSON.stringify(todos2))
+    }, [todos2])
+
+    useEffect(() => {
+        localStorage.setItem('lists3',JSON.stringify(todos3))
+    }, [todos3])
+
+    useEffect(() => {
+        localStorage.setItem('lists4',JSON.stringify(todos4))
+    }, [todos4])
 
     return (
         <>
+         <nav class="flex flex-wrap items-center justify-between p-5 bg-red-100 sticky top-0 z-50">
+            <h1 className="font-serif text-3xl ml-6 text-gray-600">Eisenhower Todo</h1>
+            {error && <p>{error}</p>}
+            <button onClick={handleLogout} className="bg-transparent hover:bg-red-500 text-red-700 font-semibold hover:text-white py-2 px-4 border border-red-500 hover:border-transparent rounded mr-10">
+                <Link to="/">Log Out</Link>
+            </button>
+        </nav> 
+        <h3 className="text-center text-xl bg-red-50 pt-4">Welcome: {currentUser.email}</h3>
         <div className="flex justify-center items-center h-screen bg-red-50">
             <div className="grid grid-rows-2 grid-flow-col gap-4">
             <div className="bg-indigo-200 h-64 w-64 rounded-tl-xl rounded-br-xl overflow-y-auto">

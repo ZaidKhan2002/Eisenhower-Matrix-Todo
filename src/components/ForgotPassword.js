@@ -1,28 +1,27 @@
 import React, { useRef, useState } from 'react'
-import { Link, useHistory } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 
-export default function Login() {
-
+export default function ForgotPassword() {
+   
    const emailRef = useRef()
-   const passwordRef = useRef()
-   const { login } = useAuth()
+   const { resetPassword} = useAuth()
    const [error, setError] = useState('')
+   const [message, setMessage] = useState('')
    const [loading, setLoading] = useState(false)
-   const history = useHistory()
-   const nameRef = useRef()
 
    async function handleSubmit(e) {
       e.preventDefault()
 
       try {
+        setMessage('')
          setError('')
-         setLoading('logging you in')
-         await login(emailRef.current.value, passwordRef.current.value)
-         history.push("/todoapp")
+         setLoading(true)
+         await resetPassword(emailRef.current.value)
+         setMessage('Check your inbox for futher instructions')
       }
       catch {
-         setError('Failed to Log in')
+         setError('Failed to reset password')
       }
       setLoading(false)
    }
@@ -31,18 +30,15 @@ export default function Login() {
       <div class="bg-grey-lighter min-h-screen flex flex-col">
             <div class="container max-w-sm mx-auto flex-1 flex flex-col items-center justify-center px-2">
                 <div class="bg-white px-6 py-8 rounded shadow-md text-black w-full">
-                    <h1 class="mb-8 text-3xl text-center">Log In</h1>
+                    <h1 class="mb-8 text-3xl text-center">Password Reset</h1>
                     {error && <alert className = "bg-red-200 text-center text-xl ">{error}</alert> }
-                    {loading && <alert className = "bg-green-200 text-center text-xl ">{loading}</alert> }
+                    {message && <alert className = "bg-red-100 text-center text-xl ">{message}</alert>}
                     <form onSubmit={handleSubmit}>
-
                     <input 
                         type="text"
                         class="block border border-grey-light w-full p-3 rounded mb-4"
-                        name="text"
-                        placeholder="Full Name" 
-                        ref={nameRef}
-                        />
+                        name="fullname"
+                        placeholder="Full Name" />
 
                     <input 
                         type="text"
@@ -51,21 +47,14 @@ export default function Login() {
                         placeholder="Email" 
                         ref={emailRef}
                         />
-                    <input 
-                        type="password"
-                        class="block border border-grey-light w-full p-3 rounded mb-4"
-                        name="password"
-                        placeholder="Password" 
-                        ref={passwordRef}
-                        />
 
                     <button disabled={loading}
                         type="submit"
-                        class="w-full text-center py-3 rounded bg-blue-600 text-white hover:bg-blue-500 focus:outline-none my-1"
-                    > Log In</button>
+                        class="w-full text-center py-3 rounded bg-green-50 text-black hover:bg-green-100 focus:outline-none my-1"
+                    >Reset Password</button>
 
                     <div className="text-center text-blue-500 my-3">
-                        <Link to="/forgot-password">Forgot Password?</Link>
+                        <Link to="/login">Log In</Link>
                     </div>
 
                     </form>
@@ -82,7 +71,7 @@ export default function Login() {
 
                 <div class="text-grey-dark mt-6">
                     Need an account? 
-                    <a class="no-underline border-b border-blue text-blue" href="../login/">
+                    <a class="no-underline border-b border-blue text-blue" href="#">
                         <Link to="/signup">Sign Up</Link>
                     </a> 
                 </div>

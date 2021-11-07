@@ -1,8 +1,15 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 
 function Container() {
     return (
         <>
+        <nav class="flex flex-wrap items-center justify-between p-5 bg-red-100 sticky top-0 z-50">
+            <h1 className="font-serif text-3xl ml-6 text-gray-600">Eisenhower Todo</h1>
+            <button className="bg-transparent hover:bg-red-500 text-red-700 font-semibold hover:text-white py-2 px-4 border border-red-500 hover:border-transparent rounded mr-10">
+                <Link to="/login">Login</Link>
+            </button>
+        </nav>  
         <div className="text-center text-base bg-red-50 pt-6">Learn about <a className="text-red-500" href="https://todoist.com/productivity-methods/eisenhower-matrix">"Eisenhower Matrix"</a></div>
         <div className="flex justify-center items-center h-screen bg-red-50">
             <div className="grid grid-rows-2 grid-flow-col gap-4">
