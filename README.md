@@ -14,7 +14,7 @@ To install node@12.22.1
    ```
 Clone the repo
    ```sh
-   git clone https://github.com/Narottam04/HackNPitch_Decoders_Krypton.git
+   git clone https://github.com/ZaidKhan2002/Eisenhower-Matrix-Todo
    ```
 Install NPM packages
    ```sh
