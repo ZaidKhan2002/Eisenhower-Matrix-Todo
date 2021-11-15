@@ -1,5 +1,5 @@
 <!-- PROJECT LOGO -->
-<h1 align="center"> Eisenhower Todo </h1>
+<h1 align="center"> Eisenhower Todo ⏳ </h1>
 
 
 ## Guide to setup the project locally
